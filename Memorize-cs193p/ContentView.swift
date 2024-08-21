@@ -8,26 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
-    let emojis = ["👻", "🎃", "🕷️", "😈", "💀", "🕸️", "🧙🏻‍♀️", "🙀", "👹","😱", "☠️", "🍭"]
-    @State var cardCount: Int = 4
+    let emojis = [["🇧🇷","🇵🇹","🏴󠁧󠁢󠁥󠁮󠁧󠁿","🇺🇸","🇪🇸","🇦🇷"],["👻", "🎃", "🕷️", "😈", "💀"],["🐶","🐨","🐵","🐱","🦊"]]
+    
+    @State var emojiKind: Int = 0
+    @State var cardCount: Int = 1
     
     var body: some View {
+        Text("Memorize!").font(.largeTitle)
         VStack{
             ScrollView{
                 cards
             }
             Spacer()
             cardCountAdjusters
+            cardsChangeTheme
         }.padding()
     }
     
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]){
             ForEach(0..<cardCount, id: \.self){index in
-                CardView(content: emojis[index]).aspectRatio(2/3 ,contentMode: .fit)
+                CardView(content: emojis[emojiKind][index]).aspectRatio(1 ,contentMode: .fit)
                 }
         }
         .foregroundColor(.orange)
+    }
+    
+    var cardsChangeTheme: some View {
+        HStack{
+            cardFlagTheme
+            cardFacesTheme
+            cardAnimalsTheme
+        }
     }
     
     var cardCountAdjusters: some View {
@@ -38,13 +50,21 @@ struct ContentView: View {
         }.imageScale(.large).font(.largeTitle)
     }
     
+    func cardChangeTheme(to theme:Int, symbol: String) -> some View {
+        Button(action: {
+            emojiKind = theme
+        }){
+            Image(systemName:symbol).font(.title)
+        }.disabled(emojiKind == theme)
+    }
+    
     func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
         Button(action: {
                 cardCount += offset
         }) {
             Image(systemName:symbol)
         }
-        .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
+        .disabled(cardCount + offset < 1 || cardCount + offset > emojis[emojiKind].count)
     }
     
     var cardRemover: some View{
@@ -53,6 +73,18 @@ struct ContentView: View {
     
     var cardAdder: some View {
         cardCountAdjuster(by: +1, symbol: "rectangle.stack.fill.badge.plus")
+    }
+    
+    var cardFlagTheme: some View {
+        cardChangeTheme(to: 0, symbol: "flag.checkered.circle")
+    }
+    
+    var cardFacesTheme: some View {
+        cardChangeTheme(to: 1, symbol: "person.circle")
+    }
+    
+    var cardAnimalsTheme: some View {
+        cardChangeTheme(to: 2, symbol: "dog.circle.fill")
     }
 }
 
