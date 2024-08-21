@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    let emojis = [["🇵🇹","🏴󠁧󠁢󠁥󠁮󠁧󠁿","🇺🇸","🇪🇸","🇦🇷"],["👻", "🎃", "🕷️", "😈", "💀","🕸️"],["🐶","🐨","🐵","🐱","🦊","🐍","🐙"]]
+    var emojis = [["🇵🇹","🏴󠁧󠁢󠁥󠁮󠁧󠁿","🇺🇸","🇪🇸","🇦🇷"],["👻", "🎃", "🕷️", "😈", "💀","🕸️"],["🐶","🐨","🐵","🐱","🦊","🐍","🐙"]]
     
     @State var emojiKind: Int = 0
     @State var cardCount: Int = 1
+    
+
     
     var body: some View {
         Text("Memorize!").font(.largeTitle)
@@ -27,9 +29,7 @@ struct ContentView: View {
     
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]){
-            ForEach(0..<cardCount, id: \.self){index in
-                CardView(content: emojis[emojiKind][index]).aspectRatio(1 ,contentMode: .fit)
-                }
+            getShuffledCards(array: emojis[emojiKind])
         }
         .foregroundColor(.orange)
     }
@@ -48,6 +48,14 @@ struct ContentView: View {
             Spacer()
             cardAdder
         }.imageScale(.large).font(.largeTitle)
+    }
+    
+    func getShuffledCards(array: [String]) -> some View {
+        var newArray = array.shuffled()
+        
+        return ForEach(0..<cardCount, id: \.self){index in
+            CardView(content: newArray[index]).aspectRatio(1 ,contentMode: .fit)
+            }
     }
     
     func cardChangeTheme(to theme:Int, symbol: String) -> some View {
