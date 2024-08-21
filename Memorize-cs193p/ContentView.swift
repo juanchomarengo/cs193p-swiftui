@@ -58,11 +58,15 @@ struct ContentView: View {
             }
     }
     
-    func cardChangeTheme(to theme:Int, symbol: String) -> some View {
+    func cardChangeTheme(to theme:Int, symbol: String, title: String = "?") -> some View {
         Button(action: {
             emojiKind = theme
         }){
-            Image(systemName:symbol).font(.title)
+            VStack{
+                Image(systemName:symbol).font(.system(size: 40))
+                Text(title).font(.system(size: 16))
+            }.padding(.horizontal).padding(.top, 10)
+           
         }.disabled(emojiKind == theme)
     }
     
@@ -84,15 +88,15 @@ struct ContentView: View {
     }
     
     var cardFlagTheme: some View {
-        cardChangeTheme(to: 0, symbol: "flag.checkered.circle")
+        cardChangeTheme(to: 0, symbol: "flag.checkered.circle", title: "Flags")
     }
     
     var cardFacesTheme: some View {
-        cardChangeTheme(to: 1, symbol: "person.circle")
+        cardChangeTheme(to: 1, symbol: "person.circle",title:"Faces")
     }
     
     var cardAnimalsTheme: some View {
-        cardChangeTheme(to: 2, symbol: "dog.circle.fill")
+        cardChangeTheme(to: 2, symbol: "dog.circle.fill", title: "Animals")
     }
 }
 
